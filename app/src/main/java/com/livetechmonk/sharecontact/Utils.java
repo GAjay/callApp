@@ -17,6 +17,7 @@ import android.util.Log;
 import com.livetechmonk.sharecontact.models.response.ContactData;
 
 import java.io.File;
+import java.sql.Date;
 import java.util.ArrayList;
 
 /**
@@ -28,7 +29,7 @@ public class Utils {
     public static void ShareImage(int imagepath, Context context) {
 
         Bitmap imgBitmap= BitmapFactory.decodeResource(context.getResources(),imagepath);
-        String imgBitmapPath= MediaStore.Images.Media.insertImage(context.getContentResolver(),imgBitmap,"title",null);
+        String imgBitmapPath= MediaStore.Images.Media.insertImage(context.getContentResolver(),imgBitmap,new Date(),null);
         Uri imgBitmapUri=Uri.parse(imgBitmapPath);
         Intent shareIntent=new Intent(Intent.ACTION_SEND);
         shareIntent.setType("image/*");
