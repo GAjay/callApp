@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">MNC Pro Trade</string>
+    <string name="submit">SUBMIT</string>
+    <string name="message">Message</string>
+    <string name="phone_no">Phone No. *</string>
+    <string name="email">Email *</string>
+    <string name="name">Name *</string>
+    <string name="required_all">Please fill all the required fields.</string>
+    <string name="alert_heading">Alert Dialog</string>
+    <string name="valid_email">Please enter valid email address.</string>
+    <string name="alert_ok_button">OK</string>
+    <string name="valid_phone">Please enter valid phone number.</string>
+    <string name="something_wrong">Something went wrong.</string>
+    <string name="internet_try">Not internet connection.</string>
+    <string name="thankyou">Your response has been locked in our system.</string>
+    <string name="alert_thank">Thank You</string>
+    <string name="alert_cancel_button">Cancel</string>
+    <string name="alert_retry_button">Retry</string>
+</resources>
