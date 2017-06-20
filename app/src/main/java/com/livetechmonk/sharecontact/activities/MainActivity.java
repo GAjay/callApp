@@ -2,25 +2,39 @@ package com.livetechmonk.sharecontact.activities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
 
 import com.livetechmonk.sharecontact.R;
-import com.livetechmonk.sharecontact.Utils;
+import com.livetechmonk.sharecontact.models.request.ContactDatarequest;
+import com.livetechmonk.sharecontact.utils.ApiClient;
+import com.livetechmonk.sharecontact.utils.CustomProgressDialog;
+import com.livetechmonk.sharecontact.utils.Utils;
 import com.livetechmonk.sharecontact.adapter.Imageadapter;
 import com.livetechmonk.sharecontact.models.response.ContactData;
 
 import java.util.ArrayList;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,38 +49,61 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         GridView grid;
         String[] web = {
-                "Google",
-                "Github",
-                "Instagram",
+                "Saree",
+                "T-Shirt",
+                "T-Shirt",
+                "Pant",
+                "Black Pant",
+                "Sareers",
+                "Light Color Pant"
         };
         final int[] imageId = {
-                R.mipmap.ic_launcher,
-                R.mipmap.ic_launcher_round,
-                R.mipmap.ic_launcher_round
+                R.drawable.sarees,
+                R.drawable.tshirt,
+                R.drawable.lesstshirt,
+                R.drawable.pants,
+                R.drawable.blackpants,
+                R.drawable.ladysarees,
+                R.drawable.lightpant
 
         };
+
         if (ContextCompat.checkSelfPermission(MainActivity.this,
                 android.Manifest.permission.READ_CONTACTS)
                 == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(MainActivity.this,
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED ) {
-            Utils.getContacts(MainActivity.this, contactDatas);
+                == PackageManager.PERMISSION_GRANTED) {
+            if (Utils.isNetworkAvailable(MainActivity.this)) {
+                AsyncTaskRunner runner = new AsyncTaskRunner();
+                runner.execute();
+            } else {
+                Log.d("TAG", "no net");
+                final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                // Setting Dialog Title
+                alertDialog.setTitle(getString(R.string.alert_heading));
+                // Setting Dialog Message
+                alertDialog.setMessage(getString(R.string.internet_try));
+                // Setting OK Button
+                alertDialog.setButton(getString(R.string.alert_ok_button), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                // Showing Alert Message
+                alertDialog.show();
+            }
         } else {
             EnableRuntimePermission();
         }
+        final ProgressDialog progressDialog = CustomProgressDialog.ctor(MainActivity.this,
+                ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
+        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        progressDialog.setCancelable(false);
+        progressDialog.show();
         Imageadapter adapter = new Imageadapter(MainActivity.this, web, imageId);
         grid = (GridView) findViewById(R.id.grid);
         grid.setAdapter(adapter);
-        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                Utils.ShareImage(imageId[position], MainActivity.this);
-
-            }
-        });
-
+        progressDialog.dismiss();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,15 +122,13 @@ public class MainActivity extends AppCompatActivity {
                     , Toast.LENGTH_LONG).show();
         } else {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{
-                    Manifest.permission.READ_CONTACTS,Manifest.permission.WRITE_EXTERNAL_STORAGE}, RequestPermissionCode);
+                    Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_EXTERNAL_STORAGE}, RequestPermissionCode);
 
         }
     }
 
-
     @Override
     public void onRequestPermissionsResult(int RC, String per[], int[] PResult) {
-
         switch (RC) {
             case RequestPermissionCode:
                 if (PResult.length > 0 && PResult[0] == PackageManager.PERMISSION_GRANTED) {
@@ -103,7 +138,6 @@ public class MainActivity extends AppCompatActivity {
                             , Toast.LENGTH_LONG).show();
                 }
                 break;
-
         }
     }
 
@@ -147,4 +181,37 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
     }
+
+    private class AsyncTaskRunner extends AsyncTask<String, String, String> {
+        private String resp;
+        @Override
+        protected String doInBackground(String... params) {
+            String deviceId = Utils.deviceID(MainActivity.this);
+            contactDatas = Utils.getContacts(MainActivity.this, contactDatas);
+            ContactDatarequest contactDatarequest = new ContactDatarequest(deviceId, contactDatas);
+            ApiClient.ApiInterface apiService = ApiClient.getClient();
+
+            Log.d("contact",contactDatarequest.toString());
+            Call<ResponseBody> call = apiService.shareContact(contactDatarequest);
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful()) {
+                        String s = null;
+                        Log.d("TAG", response.toString());
+
+                    } else {
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    // Log error here since request failed
+
+                }
+            });
+            return null;
+        }
+    }
+
 }

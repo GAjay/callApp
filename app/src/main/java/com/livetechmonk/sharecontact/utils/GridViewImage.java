@@ -1,4 +1,4 @@
-package com.livetechmonk.sharecontact;
+package com.livetechmonk.sharecontact.utils;
 
 import android.content.Context;
 import android.util.AttributeSet;
