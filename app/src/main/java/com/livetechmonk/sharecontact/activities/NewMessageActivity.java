@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,6 +43,8 @@ public class NewMessageActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         setContentView(R.layout.activity_new);
         Button button = (Button) findViewById(R.id.btn_submit_form);
 
@@ -247,11 +250,25 @@ public class NewMessageActivity extends AppCompatActivity {
             // Setting OK Button
             alertDialog.setButton(getString(R.string.alert_ok_button), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    alertDialog.dismiss();
+                    dialog.dismiss();
                 }
             });
             // Showing Alert Message
             alertDialog.show();
+        }
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                super.onBackPressed();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }
