@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.livetechmonk.sharecontact.R;
 import com.livetechmonk.sharecontact.utils.Utils;
 
+
 /**
  * @author Ajay Kumar
  */
@@ -34,7 +35,7 @@ public class Imageadapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return position;
     }
 
     @Override
@@ -45,41 +46,45 @@ public class Imageadapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
 
-        View grid;
+
         LayoutInflater inflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
+        final ViewHolder holder;
         if (convertView == null) {
-            grid = new View(mContext);
-            grid = inflater.inflate(R.layout.grid_single, null);
-            final ImageView imageView = (ImageView) grid.findViewById(R.id.grid_image);
-            imageView.setImageResource(Imageid[position]);
-            ImageView shareImage = (ImageView) grid.findViewById(R.id.ic_share);
-            TextView textView = (TextView) grid.findViewById(R.id.txtimage);
-            if(null != web[position] || web[position] != " "){
-                textView.setText(web[position]);
-            }
-            else{
-
-            }
-            RelativeLayout relativeLayout = (RelativeLayout) grid.findViewById(R.id.layout_sharebox);
-            relativeLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Utils.ShareImage(Imageid[position], mContext, imageView);
-                }
-            });
-            shareImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Utils.ShareImage(Imageid[position], mContext, imageView);
-                }
-            });
+            convertView = inflater.inflate(R.layout.grid_single, null);
+            holder = new ViewHolder();
+            holder.imageView = (ImageView) convertView.findViewById(R.id.grid_image);
+            holder.shareImage = (ImageView) convertView.findViewById(R.id.ic_share);
+            holder.textView = (TextView) convertView.findViewById(R.id.txtimage);
+            convertView.setTag(holder);
         } else {
-            grid = (View) convertView;
+            holder = (ViewHolder) convertView.getTag();
         }
+        if(null != web[position] || web[position] != " "){
+            holder.textView.setText(web[position]);
+        }
+        holder.imageView.setImageResource(Imageid[position]);
+        RelativeLayout relativeLayout = (RelativeLayout) convertView.findViewById(R.id.layout_sharebox);
+        relativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.ShareImage(Imageid[position], mContext, holder.imageView);
+            }
+        });
+        holder.shareImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.ShareImage(Imageid[position], mContext, holder.imageView);
+            }
+        });
 
+        return convertView;
+    }
 
-        return grid;
+    private class ViewHolder {
+
+        private ImageView imageView;
+        private ImageView shareImage;
+        private TextView textView;
     }
 }

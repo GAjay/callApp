@@ -49,22 +49,49 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         GridView grid;
         String[] web = {
-                "Saree",
+                "Kurti",
                 "T-Shirt",
                 "T-Shirt",
+                "T-Shirt",
+                "T-Shirt",
+                "Shirt",
+                "Shirt",
+                "Shirt",
+                "Shirt",
                 "Pant",
-                "Black Pant",
-                "Sareers",
-                "Light Color Pant"
+                "Pant",
+                "Saree",
+                "Shirt",
+                "Jogger",
+                "Men's Short",
+                "Kurti",
+                "Kurti",
+                "Kurti",
+                "Saree",
+                "Kurti",
+
         };
         final int[] imageId = {
-                R.drawable.sarees,
-                R.drawable.tshirt,
-                R.drawable.lesstshirt,
-                R.drawable.pants,
-                R.drawable.blackpants,
-                R.drawable.ladysarees,
-                R.drawable.lightpant
+                R.drawable.one,
+                R.drawable.second,
+                R.drawable.third,
+                R.drawable.fourth,
+                R.drawable.fifth,
+                R.drawable.six,
+                R.drawable.seven,
+                R.drawable.eight,
+                R.drawable.nine,
+                R.drawable.ten,
+                R.drawable.eleven,
+                R.drawable.twelve,
+                R.drawable.thirteen,
+                R.drawable.fourteen,
+                R.drawable.fifteen,
+                R.drawable.sixteen,
+                R.drawable.seventeen,
+                R.drawable.eighteen,
+                R.drawable.nineteen,
+                R.drawable.twenty,
 
         };
 
