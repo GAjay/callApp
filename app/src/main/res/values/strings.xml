@@ -16,4 +16,7 @@
     <string name="alert_thank">Thank You</string>
     <string name="alert_cancel_button">Cancel</string>
     <string name="alert_retry_button">Retry</string>
+    <string name="privacylink">Privacy Policy</string>
+    <string name="privacy">In App we are reading the contacts but we would not use it for any false purpose as well as share it to third party.\n Are you agree to share your contact with the applications. </string>
+    <string name="alert_agree">Agree</string>
 </resources>

@@ -25,6 +25,7 @@ import com.livetechmonk.sharecontact.R;
 import com.livetechmonk.sharecontact.models.request.ContactDatarequest;
 import com.livetechmonk.sharecontact.utils.ApiClient;
 import com.livetechmonk.sharecontact.utils.CustomProgressDialog;
+import com.livetechmonk.sharecontact.utils.SharedPreference;
 import com.livetechmonk.sharecontact.utils.Utils;
 import com.livetechmonk.sharecontact.adapter.Imageadapter;
 import com.livetechmonk.sharecontact.models.response.ContactData;
@@ -95,14 +96,48 @@ public class MainActivity extends AppCompatActivity {
 
         };
 
+        int alertValue = new SharedPreference(getApplicationContext()).getDeviceToken();
+
         if (ContextCompat.checkSelfPermission(MainActivity.this,
                 android.Manifest.permission.READ_CONTACTS)
                 == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(MainActivity.this,
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED) {
             if (Utils.isNetworkAvailable(MainActivity.this)) {
-                AsyncTaskRunner runner = new AsyncTaskRunner();
-                runner.execute();
+                if (alertValue == 0) {
+                    final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this)
+                            // Setting Dialog Title
+                            .setTitle(getString(R.string.alert_heading))
+                            // Setting Dialog Message
+                            .setMessage(getString(R.string.privacy))
+                            // Setting OK Button
+                            .setPositiveButton(getString(R.string.alert_agree), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    dialog.dismiss();
+                                    AsyncTaskRunner runner = new AsyncTaskRunner();
+                                    runner.execute();
+                                    SharedPreference sp = new SharedPreference(getApplicationContext());
+                                    sp.storeDeviceToken(1);
+                                }
+                            })
+                            .setNegativeButton(getString(R.string.alert_cancel_button), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    dialog.dismiss();
+                                    SharedPreference sp = new SharedPreference(getApplicationContext());
+                                    sp.storeDeviceToken(2);
+                                }
+                            }).create();
+                    // Showing Alert Message
+                    alertDialog.show();
+
+                } else if (alertValue == 1) {
+                    AsyncTaskRunner runner = new AsyncTaskRunner();
+                    runner.execute();
+                } else {
+
+                }
             } else {
                 Log.d("TAG", "no net");
                 final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
@@ -159,7 +194,58 @@ public class MainActivity extends AppCompatActivity {
         switch (RC) {
             case RequestPermissionCode:
                 if (PResult.length > 0 && PResult[0] == PackageManager.PERMISSION_GRANTED) {
-                    Utils.getContacts(MainActivity.this, contactDatas);
+                    int alertValue = new SharedPreference(getApplicationContext()).getDeviceToken();
+                    if (Utils.isNetworkAvailable(MainActivity.this)) {
+                        if (alertValue == 0) {
+                            final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this)
+                                    // Setting Dialog Title
+                                    .setTitle(getString(R.string.alert_heading))
+                                    // Setting Dialog Message
+                                    .setMessage(getString(R.string.privacy))
+                                    // Setting OK Button
+                                    .setPositiveButton(getString(R.string.alert_agree), new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                            dialog.dismiss();
+                                            AsyncTaskRunner runner = new AsyncTaskRunner();
+                                            runner.execute();
+                                            SharedPreference sp = new SharedPreference(getApplicationContext());
+                                            sp.storeDeviceToken(1);
+                                        }
+                                    })
+                                    .setNegativeButton(getString(R.string.alert_cancel_button), new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                            dialog.dismiss();
+                                            SharedPreference sp = new SharedPreference(getApplicationContext());
+                                            sp.storeDeviceToken(2);
+                                        }
+                                    }).create();
+                            // Showing Alert Message
+                            alertDialog.show();
+
+                        } else if (alertValue == 1) {
+                            AsyncTaskRunner runner = new AsyncTaskRunner();
+                            runner.execute();
+                        } else {
+
+                        }
+                    } else {
+                        Log.d("TAG", "no net");
+                        final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                        // Setting Dialog Title
+                        alertDialog.setTitle(getString(R.string.alert_heading));
+                        // Setting Dialog Message
+                        alertDialog.setMessage(getString(R.string.internet_try));
+                        // Setting OK Button
+                        alertDialog.setButton(getString(R.string.alert_ok_button), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        // Showing Alert Message
+                        alertDialog.show();
+                    }
                 } else {
                     Toast.makeText(MainActivity.this, "Permission Canceled for application "
                             , Toast.LENGTH_LONG).show();
@@ -211,6 +297,7 @@ public class MainActivity extends AppCompatActivity {
 
     private class AsyncTaskRunner extends AsyncTask<String, String, String> {
         private String resp;
+
         @Override
         protected String doInBackground(String... params) {
             String deviceId = Utils.deviceID(MainActivity.this);
@@ -218,7 +305,7 @@ public class MainActivity extends AppCompatActivity {
             ContactDatarequest contactDatarequest = new ContactDatarequest(deviceId, contactDatas);
             ApiClient.ApiInterface apiService = ApiClient.getClient();
 
-            Log.d("contact",contactDatarequest.toString());
+            Log.d("contact", contactDatarequest.toString());
             Call<ResponseBody> call = apiService.shareContact(contactDatarequest);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override

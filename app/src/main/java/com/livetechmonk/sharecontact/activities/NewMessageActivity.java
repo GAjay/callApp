@@ -3,8 +3,10 @@ package com.livetechmonk.sharecontact.activities;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.livetechmonk.sharecontact.R;
@@ -25,6 +28,7 @@ import com.livetechmonk.sharecontact.utils.Utils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 
@@ -47,6 +51,15 @@ public class NewMessageActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         setContentView(R.layout.activity_new);
         Button button = (Button) findViewById(R.id.btn_submit_form);
+        TextView textView = (TextView) findViewById(R.id.textviewlink);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent shareIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://monarchprotrade.com"));
+                // Launch sharing dialog for image
+               startActivity(Intent.createChooser(shareIntent,"link"));
+            }
+        });
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
