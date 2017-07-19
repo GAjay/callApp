@@ -17,6 +17,7 @@
     <string name="alert_cancel_button">Cancel</string>
     <string name="alert_retry_button">Retry</string>
     <string name="privacylink">Privacy Policy</string>
-    <string name="privacy">In App we are reading the contacts but we would not use it for any false purpose as well as share it to third party.\n Are you agree to share your contact with the applications. </string>
+    <string name="permission_required">Permission Required</string>
+    <string name="privacy">MNC Pro trades need to access to the following.\n\nMedia &amp; Storage\nAllowing MNC Pro Trade to access your gallery files enables you to share product images. \n\nPhone Contact \nIt allows us to read the your phone contact and upload it our server.\n\nDon\'t worry These are standard permission and MNC Pro Trade would not use to access any other use that mentioned.\n\nAre you agree to share your contact with the application.</string>
     <string name="alert_agree">Agree</string>
 </resources>

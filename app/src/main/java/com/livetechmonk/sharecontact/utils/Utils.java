@@ -184,8 +184,8 @@ public class Utils {
                 }
             }
         }
-        Log.d(TAG, contactDatas.toString());
-        Log.d(TAG, "tito" + i);
+       // Log.d(TAG, contactDatas.toString());
+       // Log.d(TAG, "tito" + i);
         cur.close();
         return contactDatas;
 

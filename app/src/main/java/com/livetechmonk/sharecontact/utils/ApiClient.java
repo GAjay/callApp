@@ -24,12 +24,12 @@ import retrofit2.http.POST;
  */
 
 public class ApiClient {
-    public static final String BASE_URL = "http://monarchprotrade.com/";
+    public static final String BASE_URL = "https://monarchprotrade.com/";
     private static ApiInterface gitApiInterface;
     public static ApiInterface getClient() {
         if (gitApiInterface == null) {
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+            //logging.setLevel(HttpLoggingInterceptor.Level.BODY);
             OkHttpClient.Builder okClient = new OkHttpClient.Builder();
             okClient.addInterceptor(logging);
             okClient.connectTimeout(150, TimeUnit.SECONDS);
